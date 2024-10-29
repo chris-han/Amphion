@@ -1,5 +1,5 @@
 pip install setuptools ruamel.yaml tqdm 
-pip install tensorboard tensorboardX torch==2.0.1
+pip install tensorboard tensorboardX torch==2.3.1
 pip install transformers===4.41.1
 pip install -U encodec
 pip install black==24.1.1

@@ -63,7 +63,6 @@ class PolyDataset(Dataset):
         return len(self.dataset)
 
     def collate_fn(self, batch):
-
         sentences = [x[0][0] for x in batch]
         ori_sents = [x[0][1] for x in batch]
         labels = [x[1] for x in batch]
@@ -91,15 +90,12 @@ class PolyDataset(Dataset):
         for j in range(batch_len):
             cur_tags_len = len(labels[j])
             batch_labels[j][:cur_tags_len] = labels[j]
-            batch_pmasks[j][:cur_tags_len] = [
-                1 if item > 0 else 0 for item in labels[j]
-            ]
-
+            batch_pmasks[j][:cur_tags_len] = [1 if item > 0 else 0 for item in labels[j]]
         # convert data to torch LongTensors
         batch_data = torch.tensor(batch_data, dtype=torch.long)
-        batch_label_starts = torch.tensor(batch_label_starts, dtype=torch.long)
-        batch_labels = torch.tensor(batch_labels, dtype=torch.long)
-        batch_pmasks = torch.tensor(batch_pmasks, dtype=torch.long)
+        batch_label_starts = torch.tensor(np.array(batch_label_starts), dtype=torch.long)  # Optimization here
+        batch_labels = torch.tensor(np.array(batch_labels), dtype=torch.long)  # Optimization here
+        batch_pmasks = torch.tensor(np.array(batch_pmasks), dtype=torch.long)  # Optimization here
         return [batch_data, batch_label_starts, batch_labels, batch_pmasks, ori_sents]
 
 

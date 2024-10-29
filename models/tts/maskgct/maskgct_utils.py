@@ -27,6 +27,19 @@ from models.tts.maskgct.g2p.g2p_generation import g2p, chn_eng_g2p
 
 from transformers import SeamlessM4TFeatureExtractor
 
+def check_and_load_model(file_name, build_fn, *args):
+    SAVE_DIR = './models/tts/maskgct/ckpt/mybuild'
+    file_path = os.path.join(SAVE_DIR, file_name)
+    if os.path.exists(file_path):
+        print(f'Loading {file_name} from {file_path}')
+        return torch.load(file_path)
+    else:
+        print(f'{file_name} does not exist. Building...')
+        model = build_fn(*args)
+        os.makedirs(SAVE_DIR, exist_ok=True)
+        torch.save(model, file_path)
+        return model
+
 
 def g2p_(text, language):
     if language in ["zh", "en"]:
@@ -50,7 +63,7 @@ def build_s2a_model(cfg, device):
 
 
 def build_semantic_model(device):
-    semantic_model = Wav2Vec2BertModel.from_pretrained("facebook/w2v-bert-2.0")
+    semantic_model = Wav2Vec2BertModel.from_pretrained("./models/tts/maskgct/ckpt/w2v-bert-2.0", local_files_only=True)
     semantic_model.eval()
     semantic_model.to(device)
     stat_mean_var = torch.load("./models/tts/maskgct/ckpt/wav2vec2bert_stats.pt")
@@ -59,6 +72,7 @@ def build_semantic_model(device):
     semantic_mean = semantic_mean.to(device)
     semantic_std = semantic_std.to(device)
     return semantic_model, semantic_mean, semantic_std
+
 
 
 def build_semantic_codec(cfg, device):
@@ -92,9 +106,7 @@ class MaskGCT_Inference_Pipeline:
         semantic_std,
         device,
     ):
-        self.processor = SeamlessM4TFeatureExtractor.from_pretrained(
-            "facebook/w2v-bert-2.0"
-        )
+        self.processor = SeamlessM4TFeatureExtractor.from_pretrained("./models/tts/maskgct/ckpt/w2v-bert-2.0",local_files_only=True)
         self.semantic_model = semantic_model
         self.semantic_codec = semantic_codec
         self.codec_encoder = codec_encoder

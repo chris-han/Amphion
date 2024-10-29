@@ -65,9 +65,9 @@ if __name__ == "__main__":
 
     # inference
     prompt_wav_path = "./models/tts/maskgct/wav/prompt.wav"
-    save_path = "[YOUR SAVE PATH]"
+    save_path = "./myprod.wav"
     prompt_text = " We do not break. We never give in. We never back down."
-    target_text = "In this paper, we introduce MaskGCT, a fully non-autoregressive TTS model that eliminates the need for explicit alignment information between text and speech supervision."
+    target_text = "I can say what fuking ever I want to say."
     # Specify the target duration (in seconds). If target_len = None, we use a simple rule to predict the target duration.
     target_len = 18
     maskgct_inference_pipeline = MaskGCT_Inference_Pipeline(

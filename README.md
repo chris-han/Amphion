@@ -120,9 +120,17 @@ sh env.sh
 git clone https://github.com/open-mmlab/Amphion.git
 cd Amphion
 
-docker pull realamphion/amphion
+# docker pull realamphion/amphion
+docker pull dockerproxy.cn/realamphion/amphion
 docker run --runtime=nvidia --gpus all -it -v .:/app realamphion/amphion
 ```
+Or build from source
+
+```bash
+docker build -t realamphion/amphion .
+docker run --runtime=nvidia --gpus all -it -v $(pwd):/app realamphion/amphion
+```
+
 Mount dataset by argument `-v` is necessary when using Docker. Please refer to [Mount dataset in Docker container](egs/datasets/docker.md) and [Docker Docs](https://docs.docker.com/engine/reference/commandline/container_run/#volume) for more details.
 
 
