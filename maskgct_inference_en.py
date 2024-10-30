@@ -83,18 +83,18 @@ if __name__ == "__main__":
     safetensors.torch.load_model(s2a_model_full, "./models/tts/maskgct/ckpt/s2a_model/s2a_model_full/model.safetensors")
 
     # inference
-    prompt_wav_path = "./models/tts/maskgct/wav/chris_zh.wav"
-    save_path = "./myprod.wav"
+    prompt_wav_path = "./models/tts/maskgct/wav/Will_Lyman.wav"
+    save_path = "./myprod_en.wav"
     # prompt_text = " We do not break. We never give in. We never back down."
-    prompt_text = "对许多美国工薪阶层来说，特朗普担任总统时，大家的日子过得还不错。"
+    prompt_text = "51% of American men say the TV remote has increased their quality of life, especially when it comes to lending. We never bait and switch and we never put you in a situation you'll regret later. In fact, we'll work with you to get the best rate possible. Pretty unusual, huh? The truth, from a financial institution?"
     # prompt_text = "本月早些时候，他抨击了负责监管SpaceX发射的互联网卫星的联邦通信委员会。他在X.com上表示，如果委员会没有“非法撤销”该公司寻求的价值超过8.86亿美元、用以向乡村地区提供互联网接入的联邦资金，那么相关卫星套件“可能会挽救北卡罗来纳州人们的生命”，此前飓风摧毁了该州部分地区。"
-    target_text = "新华社北京10月30日电（李杰、韩启扬）据中国载人航天工程办公室消息，在载人飞船与空间站组合体成功实现自主快速交会对接后，神舟十九号航天员乘组从飞船返回舱进入轨道舱。北京时间2024年10月30日12时51分，在轨执行任务的神舟十八号航天员乘组顺利打开“家门”，欢迎远道而来的神舟十九号航天员乘组入驻中国空间站，“70后”“80后”“90后”航天员齐聚“天宫”，完成中国航天史上第5次“太空会师”。随后，两个航天员乘组拍下“全家福”，共同向牵挂他们的全国人民报平安。"
+    target_text = "Edward Joseph Herlihy (August 14, 1909 – January 30, 1999) was an American newsreel narrator for Universal-International. He was also a long-time radio and television announcer for NBC, hosting The Horn and Hardart Children's Hour in the 1940s and 1950."
     # Specify the target duration (in seconds). If target_len = None, we use a simple rule to predict the target duration.
     # count the number of Chinese words in target_text using jieba package
-    target_len = len(jieba.lcut(target_text)) * 0.5 + 10
-    # prompt_len = len(prompt_text.split())
-    conv_ratio = 2.34
-    target_len = target_len/conv_ratio
+    # target_len = len(jieba.lcut(target_text)) * 0.5 + 10
+    prompt_len = len(prompt_text.split())
+    # conv_ratio = None
+    target_len = None
     maskgct_inference_pipeline = MaskGCT_Inference_Pipeline(
         semantic_model,
         semantic_codec,
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     )
 
     recovered_audio = maskgct_inference_pipeline.maskgct_inference(
-        prompt_wav_path, prompt_text, target_text, "zh", "zh", target_len=target_len
+        prompt_wav_path, prompt_text, target_text, "en", "en", target_len=target_len
     )
 
     sf.write(save_path, recovered_audio, 24000)
